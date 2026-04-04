@@ -1,0 +1,60 @@
+﻿{% extends 'base.html' %}
+{% block title %}Eventos{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">Eventos</h2>
+    {% if user.tipo_usuario != 'RESPONSAVEL' %}
+    <a href="{% url 'eventos:novo' %}" class="btn btn-primary"><i class="bi bi-plus-circle me-1"></i>Cadastrar evento</a>
+    {% endif %}
+</div>
+
+<form method="get" class="card card-body mb-3 border-0 shadow-sm">
+    <div class="row g-2 align-items-end">
+        <div class="col-md-4">{{ filtro_form.tipo_evento.label_tag }} {{ filtro_form.tipo_evento }}</div>
+        <div class="col-md-4">{{ filtro_form.turma.label_tag }} {{ filtro_form.turma }}</div>
+        <div class="col-md-3">{{ filtro_form.mes.label_tag }} {{ filtro_form.mes }}</div>
+        <div class="col-md-1"><button class="btn btn-outline-primary w-100">Filtrar</button></div>
+    </div>
+</form>
+
+<div class="card border-0 shadow-sm">
+    <div class="table-responsive">
+        <table class="table align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Tipo</th>
+                    <th>Data</th>
+                    <th>Prioridade</th>
+                    <th>Escopo</th>
+                    <th class="text-end">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for evento in eventos %}
+                <tr>
+                    <td><a class="fw-semibold text-decoration-none" href="{% url 'eventos:detalhe' evento.pk %}">{{ evento.titulo }}</a></td>
+                    <td><span class="badge" style="background: {{ evento.tipo_evento.cor|default:'#6c757d' }}">{{ evento.tipo_evento.nome }}</span></td>
+                    <td>{{ evento.data_inicio|date:'d/m/Y' }}</td>
+                    <td><span class="badge text-bg-secondary">{{ evento.get_prioridade_display }}</span></td>
+                    <td>{{ evento.get_escopo_display }}</td>
+                    <td class="text-end">
+                        <a class="btn btn-sm btn-outline-secondary" href="{% url 'eventos:detalhe' evento.pk %}">Ver</a>
+                        {% if user.tipo_usuario != 'RESPONSAVEL' %}
+                        <a class="btn btn-sm btn-outline-primary" href="{% url 'eventos:editar' evento.pk %}">Editar</a>
+                        <a class="btn btn-sm btn-outline-danger" href="{% url 'eventos:excluir' evento.pk %}">Excluir</a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="6" class="text-center text-muted py-4">Nenhum evento encontrado para este período.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% include 'components_pagination.html' with page_obj=page_obj %}
+{% endblock %}
+

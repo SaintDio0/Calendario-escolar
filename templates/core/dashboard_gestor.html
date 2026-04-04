@@ -1,0 +1,67 @@
+﻿{% extends 'base.html' %}
+{% block title %}Dashboard Gestor{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1">Dashboard Administrativo</h2>
+        <p class="text-muted mb-0">Resumo rápido da agenda escolar.</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a class="btn btn-outline-primary" href="{% url 'eventos:novo' %}"><i class="bi bi-plus-circle me-1"></i>Novo Evento</a>
+        <a class="btn btn-primary" href="{% url 'avisos:novo' %}"><i class="bi bi-megaphone me-1"></i>Novo Aviso</a>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3"><div class="card stat-card"><div class="card-body"><p>Total de eventos</p><h3>{{ total_eventos }}</h3></div></div></div>
+    <div class="col-md-3"><div class="card stat-card"><div class="card-body"><p>Eventos no mês</p><h3>{{ eventos_mes }}</h3></div></div></div>
+    <div class="col-md-3"><div class="card stat-card"><div class="card-body"><p>Eventos hoje</p><h3>{{ eventos_hoje }}</h3></div></div></div>
+    <div class="col-md-3"><div class="card stat-card"><div class="card-body"><p>Avisos ativos</p><h3>{{ avisos_ativos }}</h3></div></div></div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-7">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-header bg-white fw-semibold">Próximos eventos</div>
+            <div class="card-body">
+                {% if proximos_eventos %}
+                <ul class="list-group list-group-flush">
+                    {% for evento in proximos_eventos %}
+                    <li class="list-group-item px-0 d-flex justify-content-between align-items-center">
+                        <div>
+                            <a class="fw-semibold text-decoration-none" href="{% url 'eventos:detalhe' evento.pk %}">{{ evento.titulo }}</a>
+                            <div class="small text-muted">{{ evento.tipo_evento.nome }} • {{ evento.get_prioridade_display }}</div>
+                        </div>
+                        <span class="badge text-bg-primary">{{ evento.data_inicio|date:"d/m/Y" }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p class="text-muted mb-0">Nenhum evento encontrado para este período.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-header bg-white fw-semibold">Últimos avisos</div>
+            <div class="card-body">
+                {% if proximos_avisos %}
+                <ul class="list-group list-group-flush">
+                    {% for aviso in proximos_avisos %}
+                    <li class="list-group-item px-0">
+                        <a class="fw-semibold text-decoration-none" href="{% url 'avisos:detalhe' aviso.pk %}">{{ aviso.titulo }}</a>
+                        <div class="small text-muted">{{ aviso.data_publicacao|date:"d/m/Y H:i" }}</div>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p class="text-muted mb-0">Sem avisos ativos no momento.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

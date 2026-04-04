@@ -1,0 +1,60 @@
+﻿{% extends 'base.html' %}
+{% block title %}Vinculação Responsável x Aluno{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h2 class="h5 mb-0">Novo vínculo</h2>
+                    {% if user.tipo_usuario == 'DIRETOR' or user.tipo_usuario == 'ADMIN' %}
+                    <a href="{% url 'turmas:responsavel_novo' %}" class="btn btn-sm btn-outline-primary">Cadastrar responsável</a>
+                    {% endif %}
+                </div>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">{{ form.usuario.label_tag }} {{ form.usuario }}</div>
+                    <div class="mb-3">{{ form.aluno.label_tag }} {{ form.aluno }}</div>
+                    <div class="mb-3">{{ form.parentesco.label_tag }} {{ form.parentesco }}</div>
+                    <div class="form-check mb-3">{{ form.responsavel_principal }} <label class="form-check-label">Responsável principal</label></div>
+                    <button class="btn btn-primary w-100">Vincular</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <h2 class="h5">Vínculos cadastrados</h2>
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Responsável</th>
+                                <th>Aluno</th>
+                                <th>Parentesco</th>
+                                <th>Principal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for vinculo in vinculos %}
+                            <tr>
+                                <td>{{ vinculo.usuario.nome }}</td>
+                                <td>{{ vinculo.aluno.nome }}</td>
+                                <td>{{ vinculo.parentesco|default:'-' }}</td>
+                                <td>{% if vinculo.responsavel_principal %}Sim{% else %}Não{% endif %}</td>
+                            </tr>
+                            {% empty %}
+                            <tr><td colspan="4" class="text-center text-muted py-4">Nenhum vínculo encontrado.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% include 'components_pagination.html' with page_obj=vinculos %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,52 @@
+﻿{% extends 'base.html' %}
+{% block title %}Cadastrar Aluno{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">Cadastrar aluno</h2>
+    <a href="{% url 'turmas:alunos' %}" class="btn btn-outline-secondary">Voltar</a>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            <div class="row g-3">
+                <div class="col-md-8">
+                    <label class="form-label">{{ form.nome.label }}</label>
+                    {{ form.nome }}
+                    {{ form.nome.errors }}
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">{{ form.data_nascimento.label }}</label>
+                    {{ form.data_nascimento }}
+                    {{ form.data_nascimento.errors }}
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">{{ form.matricula.label }}</label>
+                    {{ form.matricula }}
+                    {{ form.matricula.errors }}
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">{{ form.turma.label }}</label>
+                    {{ form.turma }}
+                    {{ form.turma.errors }}
+                </div>
+                <div class="col-12 form-check mt-2 ms-1">
+                    {{ form.ativo }}
+                    <label class="form-check-label">Aluno ativo</label>
+                </div>
+            </div>
+
+            {% if form.non_field_errors %}
+            <div class="alert alert-danger mt-3">{{ form.non_field_errors }}</div>
+            {% endif %}
+
+            <div class="mt-4 d-flex gap-2">
+                <button class="btn btn-primary" type="submit">Salvar aluno</button>
+                <a class="btn btn-outline-secondary" href="{% url 'turmas:alunos' %}">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

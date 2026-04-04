@@ -1,0 +1,26 @@
+﻿{% extends 'base.html' %}
+{% block title %}{% if object %}Editar Aviso{% else %}Novo Aviso{% endif %}{% endblock %}
+
+{% block content %}
+<div class="card border-0 shadow-sm">
+    <div class="card-body">
+        <h2 class="h4 mb-3">{% if object %}Editar aviso{% else %}Cadastrar aviso{% endif %}</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="row g-3">
+                <div class="col-md-6">{{ form.titulo.label_tag }} {{ form.titulo }}</div>
+                <div class="col-md-6">{{ form.escopo.label_tag }} {{ form.escopo }}</div>
+                <div class="col-12">{{ form.mensagem.label_tag }} {{ form.mensagem }}</div>
+                <div class="col-md-6">{{ form.data_expiracao.label_tag }} {{ form.data_expiracao }}</div>
+                <div class="col-md-6 form-check mt-4">{{ form.ativo }} <label class="form-check-label">Ativo</label></div>
+                <div class="col-12">{{ form.turmas.label_tag }} {{ form.turmas }}</div>
+            </div>
+            <div class="mt-3 d-flex gap-2">
+                <button class="btn btn-primary">Salvar</button>
+                <a class="btn btn-outline-secondary" href="{% url 'avisos:lista' %}">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
